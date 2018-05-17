@@ -30,12 +30,18 @@ var ballSpeedX = 10;
    colorRect(0, 0, canvas.width, canvas.height, 'black');
    //this is left player paddle
    colorRect(10, 210, 10, 100, 'white');
-   // next line draws the ball
-   colorRect(ballX, 100, 10, 10, 'red');
+    // next line draws the ball
+  colorCircle(ballX, 150, 10, 'white');
 }
 
-function colorRect(leftX, topY, width, height, drawColor)
-{
+function colorCircle(centerX, centerY, radius, drawColor ) {
+  canvasContext.fillStyle = drawColor; 
+  canvasContext.beginPath();
+  canvasContext.arc(centerX, centerY, radius , 0, Math.PI * 2, true);
+  canvasContext.fill();
+}
+
+function colorRect(leftX, topY, width, height, drawColor) {
   canvasContext.fillStyle = drawColor;
   canvasContext.fillRect(leftX, topY, width, height, drawColor);
 }
