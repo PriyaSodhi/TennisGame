@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> Testing </title>
+  <style>
+  #myDiv {
+    height: 250px;
+    width: 250px;
+    overflow: auto;
+  }
+  #content {
+    width: 800px;
+    height: 2000px;
+    background-color: purple;
+  }
+  </style>
+</head>
+<body>
+  <h2 onclick="showCordinates(event)">Click this to get x and y coordinates of mouse pointer
+  </h2>
+  <p id ="demo"></p>
+  <div id = "myDiv" onscroll="scrollFunc()">
+    <div id = "content">Scroll inside me</div>
+  </div>
+  <p id = "scrollDemo"></p>
+<body>
+
+<script>
+function showCordinates(event) {
+  var mouseX = event.clientX;
+  var mouseY = event.clientY;
+  var cords = "X Coordinate : " + mouseX + " , Y coordinate: "+ mouseY ;
+  document.getElementById("demo").innerHTML = cords;
+}
+function scrollFunc() {
+  var element = document.getElementById("myDiv");
+  var x = element.scrollLeft;
+  var y = element.scrollTop;
+  var res = "Horizontally : "+ x + "px , Vertically : "+y +"px";
+  document.getElementById("scrollDemo").innerHTML = res;
+}
+</script>
+</html>
