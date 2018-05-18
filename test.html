@@ -23,9 +23,12 @@
     <div id = "content">Scroll inside me</div>
   </div>
   <p id = "scrollDemo"></p>
+  <canvas id ="rectCanvas" width="300" height="150" style="border:1px solid #000000"></canvas>
 <body>
 
 <script>
+var canvas = document.getElementById("rectCanvas");
+var canvasContext = canvas.getContext('2d');
 function showCordinates(event) {
   var mouseX = event.clientX;
   var mouseY = event.clientY;
