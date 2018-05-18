@@ -5,6 +5,9 @@ var ballY = 50;
 var ballSpeedX = 10;
 var ballSpeedY = 10;
 
+var player1Score = 0;
+var player2Score = 0;
+
 var paddle1Y =  250;
 var paddle2Y = 250;
 const PADDLE_HEIGHT = 100;
@@ -26,7 +29,7 @@ const PADDLE_THICKNESS = 10;
      var mousePos = calculateMousePosition(event);
      //Align the paddle’s centre on the mouse’s Y position
      paddle1Y = mousePos.y - (PADDLE_HEIGHT/2);
-     paddle2Y = mousePos.y - (PADDLE_HEIGHT/2);
+     // paddle2Y = mousePos.y - (PADDLE_HEIGHT/2);
 
    });
  }
@@ -38,9 +41,34 @@ const PADDLE_THICKNESS = 10;
    ballY = canvas.height/2;
  }
 
+ function computerMovement() {
+   var paddle2YCenter = paddle2Y + (PADDLE_HEIGHT/2);
+   //if paddleY is above the ball
+   if (paddle2YCenter < ballY - 35) {
+     paddle2Y += 6;
+   }
+   else if(paddle2YCenter > ballY +35){
+     paddle2Y -= 6;
+   }
+ }
+
  function  move(){
-   ballX = ballX + ballSpeedX;
-   ballY = ballY + ballSpeedY;
+   computerMovement();
+   ballX +=  ballSpeedX;
+   ballY += ballSpeedY;
+
+   if (ballX < 0) {
+     /*bounce the ball back if its below and above the paddle.
+     Means ball touches the paddle. change the x axis ; ballSpeedX
+     */
+     if(ballY > paddle1Y && ballY < paddle1Y + PADDLE_HEIGHT) {
+       ballSpeedX = -ballSpeedX;
+     }
+     else {
+       ballReset();
+       player2Score++;
+     }
+   }
 
    if(ballX >  canvas.width) {
      if(ballY > paddle2Y && ballY < paddle2Y + PADDLE_HEIGHT) {
@@ -48,15 +76,7 @@ const PADDLE_THICKNESS = 10;
      }
      else {
        ballReset();
-     }
-   }
-
-   if (ballX < 0) {
-     if(ballY > paddle1Y && ballY < paddle1Y + PADDLE_HEIGHT) {
-       ballSpeedX = -ballSpeedX;
-     }
-     else {
-       ballReset();
+       player1Score++ ;
      }
    }
 
@@ -79,6 +99,8 @@ const PADDLE_THICKNESS = 10;
    colorRect(canvas.width - PADDLE_THICKNESS , paddle2Y, PADDLE_THICKNESS, PADDLE_HEIGHT, 'white');
     // next line draws the ball
    colorCircle(ballX, ballY, 10, 'white');
+   canvasContext.fillText(player1Score, 100, 100);
+   canvasContext.fillText(player2Score, canvas.width - 100, 100);
 }
 
 function colorCircle(centerX, centerY, radius, drawColor ) {
