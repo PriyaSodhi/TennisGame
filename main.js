@@ -19,10 +19,15 @@ const PADDLE_THICKNESS = 10;
    var framerPerSecond = 30
    canvas = document.getElementById('gameCanvas');
    canvasContext = canvas.getContext('2d');
+   canvasContext.font = "20px Verdana";
    setInterval(function() { //inline function
      move();
      draw();
    }, 1000/framerPerSecond); // draw function is will take a pause of 1000ms.
+
+   //next line will handle the mouse click event
+   canvas.addEventListener('mousedown', handleMouseClick);
+
    /*
    next line will calculate the mouse coordinates and will
    change the y coordinate of paddle correspondingly
@@ -32,15 +37,12 @@ const PADDLE_THICKNESS = 10;
      //Align the paddle’s centre on the mouse’s Y position
      paddle1Y = mousePos.y - (PADDLE_HEIGHT/2);
      // paddle2Y = mousePos.y - (PADDLE_HEIGHT/2);
-
    });
  }
 
  function ballReset()
  {
    if(player1Score >= WINNING_SCORE || player2Score >= WINNING_SCORE) {
-     player1Score = 0;
-     player2Score = 0;
      showingWinScreen =true;
    }
    ballSpeedX = -ballSpeedX;
@@ -61,7 +63,7 @@ const PADDLE_THICKNESS = 10;
 
  function  move(){
    if(showingWinScreen) {
-     return; 
+     return;
    }
    computerMovement();
    ballX +=  ballSpeedX;
@@ -105,6 +107,15 @@ const PADDLE_THICKNESS = 10;
      ballSpeedY = -ballSpeedY;
    }
  }
+ 
+ function drawNet() {
+   for(var i=0; i<canvas.height; i += 40) {
+     /* draw a net with x axis as center of the canvas, y axis as i, 2 is the
+     width of the rectangle and 20 is the height of it.
+     */
+      colorRect(canvas.width/2-1, i, 2, 20, 'white');
+   }
+ }
 
  function draw() {
    console.log("Arcade Game");
@@ -113,10 +124,21 @@ const PADDLE_THICKNESS = 10;
    colorRect(0, 0, canvas.width, canvas.height, 'purple');
 
    if(showingWinScreen) {
+     if(player1Score >= WINNING_SCORE){
+       canvasContext.fillStyle = 'white';
+       canvasContext.fillText("Left Player  wons the game", 680, 200);
+     }
+     else if(player2Score >=WINNING_SCORE) {
+       canvasContext.fillStyle = 'white';
+       canvasContext.fillText("Right Player wons the game", 680, 200);
+     }
+
      canvasContext.fillStyle = 'white';
-     canvasContext.fillText("click to continue",  100, 100);
+     canvasContext.fillText("click to continue", 680, 500);
      return;
    }
+ 
+   drawNet();
    //this is left player paddle
    colorRect(0, paddle1Y, PADDLE_THICKNESS, PADDLE_HEIGHT , 'white');
    //this is right computer paddle
@@ -149,4 +171,12 @@ function calculateMousePosition(event) {
     x:mouseX,
     y:mouseY
   };
+}
+
+function handleMouseClick(event) {
+  if (showingWinScreen) {
+    player1Score = 0;
+    player2Score = 0;
+    showingWinScreen = false;
+  }
 }
