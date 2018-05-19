@@ -7,6 +7,8 @@ var ballSpeedY = 10;
 
 var player1Score = 0;
 var player2Score = 0;
+const WINNING_SCORE = 3;
+var showingWinScreen = false;
 
 var paddle1Y =  250;
 var paddle2Y = 250;
@@ -36,6 +38,11 @@ const PADDLE_THICKNESS = 10;
 
  function ballReset()
  {
+   if(player1Score >= WINNING_SCORE || player2Score >= WINNING_SCORE) {
+     player1Score = 0;
+     player2Score = 0;
+     showingWinScreen =true;
+   }
    ballSpeedX = -ballSpeedX;
    ballX = canvas.width/2;
    ballY = canvas.height/2;
@@ -53,6 +60,9 @@ const PADDLE_THICKNESS = 10;
  }
 
  function  move(){
+   if(showingWinScreen) {
+     return; 
+   }
    computerMovement();
    ballX +=  ballSpeedX;
    ballY += ballSpeedY;
@@ -63,20 +73,28 @@ const PADDLE_THICKNESS = 10;
      */
      if(ballY > paddle1Y && ballY < paddle1Y + PADDLE_HEIGHT) {
        ballSpeedX = -ballSpeedX;
+       /*
+       Change the speed vertically based on where the balls hits the paddle
+       Subtract center of the paddle from ball's current position
+       */
+       var deltaY = ballY - (paddle1Y+PADDLE_HEIGHT/2);
+       ballSpeedY = deltaY * 0.35;
      }
      else {
+       player2Score++; //must be before ballReset()
        ballReset();
-       player2Score++;
      }
    }
 
    if(ballX >  canvas.width) {
      if(ballY > paddle2Y && ballY < paddle2Y + PADDLE_HEIGHT) {
        ballSpeedX = -ballSpeedX;
+       var deltaY = ballY - (paddle2Y+PADDLE_HEIGHT/2);
+       ballSpeedY = deltaY * 0.35;
      }
      else {
+       player1Score++; //must be before ballReset()
        ballReset();
-       player1Score++ ;
      }
    }
 
@@ -92,7 +110,13 @@ const PADDLE_THICKNESS = 10;
    console.log("Arcade Game");
    console.log(ballX);
    //next line blanks out the screen black
-   colorRect(0, 0, canvas.width, canvas.height, 'black');
+   colorRect(0, 0, canvas.width, canvas.height, 'purple');
+
+   if(showingWinScreen) {
+     canvasContext.fillStyle = 'white';
+     canvasContext.fillText("click to continue",  100, 100);
+     return;
+   }
    //this is left player paddle
    colorRect(0, paddle1Y, PADDLE_THICKNESS, PADDLE_HEIGHT , 'white');
    //this is right computer paddle
